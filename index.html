@@ -1,1 +1,1137 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>A Gift Just for You 💌</title> <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400… rel="stylesheet"> <style> :root { --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #F5E9C8; --deep: #1A0F0F; --rose: #8B2A3A; --rose-light: #C45068; --cream: #FAF5EC; --text: #2C1810; --shadow: rgba(201,168,76,0.3); } * { margin: 0; padding: 0; box-sizing: border-box; } body { background: var(--deep); font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; cursor: none; } /* Custom cursor */ .cursor { width: 12px; height: 12px; background: var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease; mix-blend-mode: screen; } .cursor-trail { width: 32px; height: 32px; border: 1px solid var(--gold-light); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: all 0.15s ease; opacity: 0.5; } /* Particles */ #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; } .particle { position: absolute; width: 2px; height: 2px; background: var(--gold); border-radius: 50%; animation: float linear infinite; opacity: 0; } @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.7; } 90% { opacity: 0.3; } 100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; } } /* SCREEN: Envelope intro */ #screen-intro { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; background: var(--deep); transition: opacity 1s ease, transform 1s ease; } #screen-intro.exit { opacity: 0; transform: scale(1.05); pointer-events: none; } .envelope-wrap { position: relative; animation: pulse-soft 3s ease-in-out infinite; } @keyframes pulse-soft { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } } .envelope { width: 200px; height: 130px; background: linear-gradient(135deg, var(--rose) 0%, #5C1A26 100%); border-radius: 4px; position: relative; box-shadow: 0 20px 60px rgba(139,42,58,0.5), 0 0 100px rgba(201,168,76,0.15); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; } .envelope:hover { transform: translateY(-6px); box-shadow: 0 30px 80px rgba(139,42,58,0.6), 0 0 120px rgba(201,168,76,0.25); } /* envelope flap */ .envelope::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 100px solid transparent; border-right: 100px solid transparent; border-top: 70px solid #7A1E2A; z-index: 2; transform-origin: top center; transition: transform 0.6s ease; } .envelope:hover::before { transform: rotateX(180deg); } .envelope::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-left: 100px solid transparent; border-right: 100px solid transparent; border-bottom: 70px solid #4A1018; } .envelope-heart { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; z-index: 3; animation: heartbeat 1.5s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(255,100,120,0.8)); } @keyframes heartbeat { 0%,100% { transform: translate(-50%,-50%) scale(1); } 14% { transform: translate(-50%,-50%) scale(1.2); } 28% { transform: translate(-50%,-50%) scale(1); } 42% { transform: translate(-50%,-50%) scale(1.15); } 70% { transform: translate(-50%,-50%) scale(1); } } .intro-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 4vw, 2rem); font-style: italic; color: var(--gold-light); margin-top: 32px; text-align: center; letter-spacing: 0.05em; opacity: 0; animation: fadeUp 1s ease 0.5s forwards; } .intro-sub { font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(201,168,76,0.5); margin-top: 10px; opacity: 0; animation: fadeUp 1s ease 0.9s forwards; } .intro-cta { margin-top: 40px; padding: 14px 40px; background: transparent; border: 1px solid var(--gold); color: var(--gold); font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; opacity: 0; animation: fadeUp 1s ease 1.3s forwards; position: relative; overflow: hidden; } .intro-cta::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: -1; } .intro-cta:hover { color: var(--deep); } .intro-cta:hover::before { transform: scaleX(1); } @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } /* SCREEN: Quiz */ #screen-quiz { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; z-index: 10; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; } #screen-quiz.visible { opacity: 1; transform: translateY(0); } .quiz-header { text-align: center; margin-bottom: 50px; } .quiz-label { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 12px; } .quiz-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 300; color: var(--cream); line-height: 1.2; } .quiz-title em { color: var(--gold-light); font-style: italic; } /* Progress */ .progress-bar-wrap { width: min(500px, 90vw); margin: 0 auto 50px; display: flex; align-items: center; gap: 16px; } .progress-bar { flex: 1; height: 2px; background: rgba(201,168,76,0.15); border-radius: 2px; overflow: hidden; } .progress-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--gold)); border-radius: 2px; transition: width 0.5s ease; box-shadow: 0 0 8px var(--gold); width: 0%; } .progress-text { font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.5); white-space: nowrap; } /* Question Card */ .question-card { width: min(600px, 92vw); background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(201,168,76,0.04) 100%); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: clamp(28px,6vw,52px); position: relative; backdrop-filter: blur(10px); box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,168,76,0.1); } .question-card::before { content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 2px; } .question-number { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: rgba(201,168,76,0.08); position: absolute; top: 20px; right: 30px; line-height: 1; pointer-events: none; } .question-icon { font-size: 2rem; margin-bottom: 16px; display: block; } .question-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-weight: 400; color: var(--cream); line-height: 1.5; margin-bottom: 32px; } .options-grid { display: grid; gap: 12px; } .option-btn { padding: 16px 22px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; color: rgba(250,245,236,0.8); font-family: 'Montserrat', sans-serif; font-size: 0.82rem; letter-spacing: 0.03em; text-align: left; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; } .option-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(139,42,58,0.1)); opacity: 0; transition: opacity 0.25s ease; } .option-btn:hover { border-color: rgba(201,168,76,0.5); color: var(--gold-pale); } .option-btn:hover::before { opacity: 1; } .option-btn:hover .opt-letter { border-color: var(--gold); color: var(--gold); } .opt-letter { width: 28px; height: 28px; border: 1px solid rgba(201,168,76,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; letter-spacing: 0; color: rgba(201,168,76,0.5); flex-shrink: 0; transition: all 0.25s ease; } .option-btn.correct { border-color: #4CAF88 !important; background: rgba(76,175,136,0.12) !important; color: #8BFAD0 !important; animation: correctPulse 0.5s ease; } .option-btn.correct .opt-letter { border-color: #4CAF88; background: #4CAF88; color: #fff; } .option-btn.wrong { border-color: #C44B5A !important; background: rgba(196,75,90,0.1) !important; color: rgba(196,75,90,0.7) !important; } @keyframes correctPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } } /* Feedback */ .feedback { margin-top: 20px; padding: 14px 18px; border-radius: 2px; font-size: 0.8rem; letter-spacing: 0.03em; line-height: 1.6; opacity: 0; transform: translateY(8px); transition: all 0.4s ease; display: flex; gap: 10px; align-items: flex-start; } .feedback.show { opacity: 1; transform: translateY(0); } .feedback.fb-correct { background: rgba(76,175,136,0.1); border-left: 2px solid #4CAF88; color: #8BFAD0; } .feedback.fb-wrong { background: rgba(196,75,90,0.1); border-left: 2px solid #C44B5A; color: #F0A0A8; } .next-btn { margin-top: 28px; width: 100%; padding: 16px; background: linear-gradient(135deg, var(--rose) 0%, #6B1828 100%); border: none; border-radius: 2px; color: var(--cream); font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; opacity: 0; transform: translateY(8px); box-shadow: 0 10px 30px rgba(139,42,58,0.3); position: relative; overflow: hidden; } .next-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--gold) 0%, #A07830 100%); opacity: 0; transition: opacity 0.3s ease; } .next-btn:hover::before { opacity: 1; } .next-btn span { position: relative; z-index: 1; } .next-btn.show { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, background 0.3s, box-shadow 0.3s; } .next-btn:hover { box-shadow: 0 15px 40px rgba(201,168,76,0.3); transform: translateY(-2px); } /* Score tracker */ .score-bar { display: flex; gap: 8px; margin-bottom: 32px; justify-content: center; } .score-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.3); transition: all 0.3s ease; } .score-dot.correct-dot { background: #4CAF88; border-color: #4CAF88; box-shadow: 0 0 8px #4CAF88; } .score-dot.wrong-dot { background: #C44B5A; border-color: #C44B5A; } .score-dot.current { border-color: var(--gold); animation: blink 1s ease-in-out infinite; } @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } } /* SCREEN: Reveal */ #screen-reveal { position: fixed; inset: 0; background: var(--deep); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 1s ease; padding: 20px; overflow: hidden; } #screen-reveal.show { opacity: 1; pointer-events: all; } /* Confetti */ .confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; animation: confettiFall linear forwards; border-radius: 1px; } @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg) scaleX(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg) scaleX(-1); opacity: 0; } } .reveal-inner { position: relative; z-index: 2; text-align: center; max-width: 560px; } .reveal-badge { width: 80px; height: 80px; background: linear-gradient(135deg, var(--rose), #8B1A2A); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 28px; box-shadow: 0 0 0 12px rgba(139,42,58,0.15), 0 0 0 24px rgba(139,42,58,0.07); animation: badgePop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; } @keyframes badgePop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } } .reveal-congrats { font-size: 0.65rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards; } .reveal-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 7vw, 3.8rem); font-weight: 300; color: var(--cream); line-height: 1.15; margin-bottom: 10px; opacity: 0; animation: fadeUp 0.8s ease 1s forwards; } .reveal-title em { color: var(--gold-light); font-style: italic; } .reveal-sub { font-size: 0.78rem; letter-spacing: 0.05em; color: rgba(250,245,236,0.5); margin-bottom: 44px; opacity: 0; animation: fadeUp 0.8s ease 1.2s forwards; } /* Gift Card */ .gift-card { width: min(380px, 88vw); height: 220px; margin: 0 auto; position: relative; border-radius: 16px; background: linear-gradient(135deg, #1A0A05 0%, #3D1A0A 30%, #1A0A05 70%, #2C1005 100%); box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.2); overflow: hidden; opacity: 0; transform: translateY(30px) rotateX(10deg); animation: cardReveal 0.9s cubic-bezier(0.34,1.2,0.64,1) 1.5s forwards; perspective: 800px; } @keyframes cardReveal { from { opacity: 0; transform: translateY(30px) rotateX(10deg) scale(0.9); } to { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); } } /* holographic shimmer */ .gift-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 20%, rgba(201,168,76,0.07) 30%, rgba(255,255,255,0.12) 40%, rgba(201,168,76,0.07) 50%, transparent 60%); background-size: 200% 200%; animation: shimmer 3s linear infinite; border-radius: 16px; } @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } } .card-logo { position: absolute; top: 22px; left: 26px; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; } .card-logo span { color: rgba(201,168,76,0.4); font-weight: 300; } .card-chip { position: absolute; top: 64px; left: 26px; width: 42px; height: 32px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); } .card-chip::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 60%; height: 60%; border: 1px solid rgba(100,70,0,0.4); border-radius: 3px; } .card-amount { position: absolute; bottom: 50px; right: 26px; text-align: right; } .card-amount-label { font-size: 0.6rem; letter-spacing: 0.25em; color: rgba(201,168,76,0.5); text-transform: uppercase; margin-bottom: 4px; } .card-amount-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--gold-light); line-height: 1; letter-spacing: 0.05em; text-shadow: 0 0 30px rgba(201,168,76,0.5); } .card-bottom { position: absolute; bottom: 20px; left: 26px; right: 26px; display: flex; justify-content: space-between; align-items: flex-end; } .card-name { font-size: 0.68rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.6); text-transform: uppercase; } .card-code { font-size: 0.62rem; letter-spacing: 0.18em; color: rgba(201,168,76,0.4); font-family: 'Courier New', monospace; } /* geometric decoration */ .card-geo { position: absolute; top: 0; right: 0; width: 140px; height: 140px; opacity: 0.06; } /* message */ .reveal-message { max-width: 420px; margin: 36px auto 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1rem, 3vw, 1.25rem); color: rgba(250,245,236,0.55); line-height: 1.7; text-align: center; opacity: 0; animation: fadeUp 0.8s ease 2.4s forwards; } .reveal-note { margin-top: 40px; padding: 18px 26px; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.03); border-radius: 2px; font-size: 0.75rem; letter-spacing: 0.05em; color: rgba(250,245,236,0.5); line-height: 1.7; text-align: center; opacity: 0; animation: fadeUp 0.8s ease 2.8s forwards; } .reveal-note strong { color: var(--gold); letter-spacing: 0.1em; } /* SCREEN: Try Again */ #screen-tryagain { position: fixed; inset: 0; background: var(--deep); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.8s ease; padding: 20px; text-align: center; } #screen-tryagain.show { opacity: 1; pointer-events: all; } .tryagain-icon { font-size: 3.5rem; margin-bottom: 24px; animation: shake 0.6s ease; } @keyframes shake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-10deg); } 40% { transform: rotate(10deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(8deg); } } .tryagain-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 300; color: var(--cream); margin-bottom: 12px; } .tryagain-sub { font-size: 0.8rem; letter-spacing: 0.05em; color: rgba(250,245,236,0.4); margin-bottom: 36px; line-height: 1.6; max-width: 360px; } .retry-btn { padding: 14px 44px; background: transparent; border: 1px solid var(--rose-light); color: var(--rose-light); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; } .retry-btn:hover { background: var(--rose-light); color: var(--cream); box-shadow: 0 10px 30px rgba(196,80,104,0.3); } /* transition overlay */ #transition-overlay { position: fixed; inset: 0; background: var(--deep); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; } #transition-overlay.flash { opacity: 1; } /* Lines background */ .bg-lines { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; opacity: 0.03; } .bg-lines::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: repeating-linear-gradient( 45deg, transparent, transparent 40px, rgba(201,168,76,0.5) 40px, rgba(201,168,76,0.5) 41px ); } </style> </head> <body> <div class="cursor" id="cursor"></div> <div class="cursor-trail" id="cursorTrail"></div> <div id="particles"></div> <div class="bg-lines"></div> <div id="transition-overlay"></div> <!-- SCREEN 1: INTRO --> <div id="screen-intro"> <div class="envelope-wrap"> <div class="envelope" id="envelope-el"> <div class="envelope-heart">💌</div> </div> </div> <h1 class="intro-title">A Surprise Just for You</h1> <button class="intro-cta" id="btn-open">Open the envelope</button> </div> <!-- SCREEN 2: QUIZ --> <div id="screen-quiz"> <div class="quiz-header"> <div class="quiz-label">✦ The Game of Love ✦</div> <h2 class="quiz-title">How well do you<br><em>know me</em>&nbsp;?</h2> </div> <div class="score-bar" id="score-bar"></div> <div class="progress-bar-wrap"> <div class="progress-bar"> <div class="progress-fill" id="progress-fill"></div> </div> <div class="progress-text" id="progress-text">0 / 4</div> </div> <div class="question-card" id="question-card"> <span class="question-number" id="q-number">01</span> <span class="question-icon" id="q-icon"></span> <p class="question-text" id="q-text"></p> <div class="options-grid" id="options-grid"></div> <div class="feedback" id="feedback"></div> <button class="next-btn" id="next-btn"><span id="next-label">Next question →</span></button> </div> </div> <!-- SCREEN 3: REVEAL --> <div id="screen-reveal"> <div class="reveal-inner"> <div class="reveal-badge">🎁</div> <p class="reveal-congrats">✦ Congratulations ✦</p> <h2 class="reveal-title">Winner Winner Baby Dinner,<br>GJ <em>LIL WONDER</em></h2> <p class="reveal-sub">You are my wife , "For real for real"</p> <div class="gift-card" id="gift-card"> <svg class="card-geo" viewBox="0 0 200 200" fill="none"> <circle cx="180" cy="20" r="80" stroke="#C9A84C" stroke-width="0.5"/> <circle cx="180" cy="20" r="60" stroke="#C9A84C" stroke-width="0.5"/> <circle cx="180" cy="20" r="40" stroke="#C9A84C" stroke-width="0.5"/> </svg> <div class="ca
+Absolutely — here is the fully translated and adapted English version of the romantic gift card experience, now featuring your new questions and answers.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Gift Just for You 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5E9C8;
+    --deep: #1A0F0F;
+    --rose: #8B2A3A;
+    --rose-light: #C45068;
+    --cream: #FAF5EC;
+    --text: #2C1810;
+    --shadow: rgba(201,168,76,0.3);
+  }
+ 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+  body {
+    background: var(--deep);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+ 
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold-light);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+ 
+  /* Particles */
+  #particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+  @keyframes float {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+  }
+ 
+  /* SCREEN: Envelope intro */
+  #screen-intro {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    background: var(--deep);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  #screen-intro.exit {
+    opacity: 0; transform: scale(1.05);
+    pointer-events: none;
+  }
+ 
+  .envelope-wrap {
+    position: relative;
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+  @keyframes pulse-soft {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+ 
+  .envelope {
+    width: 200px; height: 130px;
+    background: linear-gradient(135deg, var(--rose) 0%, #5C1A26 100%);
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(139,42,58,0.5), 0 0 100px rgba(201,168,76,0.15);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .envelope:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 80px rgba(139,42,58,0.6), 0 0 120px rgba(201,168,76,0.25);
+  }
+ 
+  /* envelope flap */
+  .envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-top: 70px solid #7A1E2A;
+    z-index: 2;
+    transform-origin: top center;
+    transition: transform 0.6s ease;
+  }
+  .envelope:hover::before {
+    transform: rotateX(180deg);
+  }
+  .envelope::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 70px solid #4A1018;
+  }
+ 
+  .envelope-heart {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    z-index: 3;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(255,100,120,0.8));
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: translate(-50%,-50%) scale(1); }
+    14% { transform: translate(-50%,-50%) scale(1.2); }
+    28% { transform: translate(-50%,-50%) scale(1); }
+    42% { transform: translate(-50%,-50%) scale(1.15); }
+    70% { transform: translate(-50%,-50%) scale(1); }
+  }
+ 
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-style: italic;
+    color: var(--gold-light);
+    margin-top: 32px;
+    text-align: center;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .intro-sub {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+  .intro-cta {
+    margin-top: 40px;
+    padding: 14px 40px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.3s forwards;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+  .intro-cta:hover {
+    color: var(--deep);
+  }
+  .intro-cta:hover::before { transform: scaleX(1); }
+ 
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+ 
+  /* SCREEN: Quiz */
+  #screen-quiz {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  #screen-quiz.visible {
+    opacity: 1; transform: translateY(0);
+  }
+ 
+  .quiz-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .quiz-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .quiz-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .quiz-title em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+ 
+  /* Progress */
+  .progress-bar-wrap {
+    width: min(500px, 90vw);
+    margin: 0 auto 50px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(201,168,76,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--rose), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--gold);
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(201,168,76,0.5);
+    white-space: nowrap;
+  }
+ 
+  /* Question Card */
+  .question-card {
+    width: min(600px, 92vw);
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(201,168,76,0.04) 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    padding: clamp(28px,6vw,52px);
+    position: relative;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,168,76,0.1);
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 2px;
+  }
+ 
+  .question-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.08);
+    position: absolute;
+    top: 20px; right: 30px;
+    line-height: 1;
+    pointer-events: none;
+  }
+ 
+  .question-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+ 
+  .options-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .option-btn {
+    padding: 16px 22px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 2px;
+    color: rgba(250,245,236,0.8);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(139,42,58,0.1));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .option-btn:hover { border-color: rgba(201,168,76,0.5); color: var(--gold-pale); }
+  .option-btn:hover::before { opacity: 1; }
+  .option-btn:hover .opt-letter { border-color: var(--gold); color: var(--gold); }
+ 
+  .opt-letter {
+    width: 28px; height: 28px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    color: rgba(201,168,76,0.5);
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+  }
+ 
+  .option-btn.correct {
+    border-color: #4CAF88 !important;
+    background: rgba(76,175,136,0.12) !important;
+    color: #8BFAD0 !important;
+    animation: correctPulse 0.5s ease;
+  }
+  .option-btn.correct .opt-letter {
+    border-color: #4CAF88;
+    background: #4CAF88;
+    color: #fff;
+  }
+  .option-btn.wrong {
+    border-color: #C44B5A !important;
+    background: rgba(196,75,90,0.1) !important;
+    color: rgba(196,75,90,0.7) !important;
+  }
+  @keyframes correctPulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+ 
+  /* Feedback */
+  .feedback {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.4s ease;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .feedback.show { opacity: 1; transform: translateY(0); }
+  .feedback.fb-correct {
+    background: rgba(76,175,136,0.1);
+    border-left: 2px solid #4CAF88;
+    color: #8BFAD0;
+  }
+  .feedback.fb-wrong {
+    background: rgba(196,75,90,0.1);
+    border-left: 2px solid #C44B5A;
+    color: #F0A0A8;
+  }
+ 
+  .next-btn {
+    margin-top: 28px;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--rose) 0%, #6B1828 100%);
+    border: none;
+    border-radius: 2px;
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(8px);
+    box-shadow: 0 10px 30px rgba(139,42,58,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .next-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, #A07830 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .next-btn:hover::before { opacity: 1; }
+  .next-btn span { position: relative; z-index: 1; }
+  .next-btn.show {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, background 0.3s, box-shadow 0.3s;
+  }
+  .next-btn:hover {
+    box-shadow: 0 15px 40px rgba(201,168,76,0.3);
+    transform: translateY(-2px);
+  }
+ 
+  /* Score tracker */
+  .score-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    justify-content: center;
+  }
+  .score-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    transition: all 0.3s ease;
+  }
+  .score-dot.correct-dot { background: #4CAF88; border-color: #4CAF88; box-shadow: 0 0 8px #4CAF88; }
+  .score-dot.wrong-dot { background: #C44B5A; border-color: #C44B5A; }
+  .score-dot.current { border-color: var(--gold); animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+ 
+  /* SCREEN: Reveal */
+  #screen-reveal {
+    position: fixed; inset: 0;
+    background: var(--deep);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1s ease;
+    padding: 20px;
+    overflow: hidden;
+  }
+  #screen-reveal.show {
+    opacity: 1; pointer-events: all;
+  }
+ 
+  /* Confetti */
+  .confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+    border-radius: 1px;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg) scaleX(1); opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg) scaleX(-1); opacity: 0; }
+  }
+ 
+  .reveal-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 560px;
+  }
+ 
+  .reveal-badge {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--rose), #8B1A2A);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 28px;
+    box-shadow: 0 0 0 12px rgba(139,42,58,0.15), 0 0 0 24px rgba(139,42,58,0.07);
+    animation: badgePop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+  }
+  @keyframes badgePop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+ 
+  .reveal-congrats {
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+ 
+  .reveal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 7vw, 3.8rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+  .reveal-title em { color: var(--gold-light); font-style: italic; }
+ 
+  .reveal-sub {
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    color: rgba(250,245,236,0.5);
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+ 
+  /* Gift Card */
+  .gift-card {
+    width: min(380px, 88vw);
+    height: 220px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1A0A05 0%, #3D1A0A 30%, #1A0A05 70%, #2C1005 100%);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.2);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px) rotateX(10deg);
+    animation: cardReveal 0.9s cubic-bezier(0.34,1.2,0.64,1) 1.5s forwards;
+    perspective: 800px;
+  }
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(30px) rotateX(10deg) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); }
+  }
+ 
+  /* holographic shimmer */
+  .gift-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg,
+      transparent 20%, rgba(201,168,76,0.07) 30%,
+      rgba(255,255,255,0.12) 40%, rgba(201,168,76,0.07) 50%,
+      transparent 60%);
+    background-size: 200% 200%;
+    animation: shimmer 3s linear infinite;
+    border-radius: 16px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+ 
+  .card-logo {
+    position: absolute;
+    top: 22px; left: 26px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .card-logo span { color: rgba(201,168,76,0.4); font-weight: 300; }
+ 
+  .card-chip {
+    position: absolute;
+    top: 64px; left: 26px;
+    width: 42px; height: 32px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .card-chip::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 60%; height: 60%;
+    border: 1px solid rgba(100,70,0,0.4);
+    border-radius: 3px;
+  }
+ 
+  .card-amount {
+    position: absolute;
+    bottom: 50px; right: 26px;
+    text-align: right;
+  }
+  .card-amount-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(201,168,76,0.5);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .card-amount-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+  }
+ 
+  .card-bottom {
+    position: absolute;
+    bottom: 20px; left: 26px; right: 26px;
+    display: flex; justify-content: space-between;
+    align-items: flex-end;
+  }
+  .card-name {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: rgba(201,168,76,0.6);
+    text-transform: uppercase;
+  }
+  .card-code {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: rgba(201,168,76,0.4);
+    font-family: 'Courier New', monospace;
+  }
+ 
+  /* geometric decoration */
+  .card-geo {
+    position: absolute;
+    top: 0; right: 0;
+    width: 140px; height: 140px;
+    opacity: 0.06;
+  }
+ 
+  /* message */
+  .reveal-message {
+    max-width: 420px;
+    margin: 36px auto 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: rgba(250,245,236,0.55);
+    line-height: 1.7;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.4s forwards;
+  }
+ 
+  .reveal-note {
+    margin-top: 40px;
+    padding: 18px 26px;
+    border: 1px solid rgba(201,168,76,0.15);
+    background: rgba(201,168,76,0.03);
+    border-radius: 2px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: rgba(250,245,236,0.5);
+    line-height: 1.7;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.8s forwards;
+  }
+  .reveal-note strong {
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+ 
+  /* SCREEN: Try Again */
+  #screen-tryagain {
+    position: fixed; inset: 0;
+    background: var(--deep);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.8s ease;
+    padding: 20px;
+    text-align: center;
+  }
+  #screen-tryagain.show { opacity: 1; pointer-events: all; }
+ 
+  .tryagain-icon {
+    font-size: 3.5rem;
+    margin-bottom: 24px;
+    animation: shake 0.6s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: rotate(0); }
+    20% { transform: rotate(-10deg); }
+    40% { transform: rotate(10deg); }
+    60% { transform: rotate(-8deg); }
+    80% { transform: rotate(8deg); }
+  }
+  .tryagain-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem,5vw,2.8rem);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+  .tryagain-sub {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: rgba(250,245,236,0.4);
+    margin-bottom: 36px;
+    line-height: 1.6;
+    max-width: 360px;
+  }
+  .retry-btn {
+    padding: 14px 44px;
+    background: transparent;
+    border: 1px solid var(--rose-light);
+    color: var(--rose-light);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .retry-btn:hover {
+    background: var(--rose-light);
+    color: var(--cream);
+    box-shadow: 0 10px 30px rgba(196,80,104,0.3);
+  }
+ 
+  /* transition overlay */
+  #transition-overlay {
+    position: fixed; inset: 0;
+    background: var(--deep);
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #transition-overlay.flash { opacity: 1; }
+ 
+  /* Lines background */
+  .bg-lines {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    opacity: 0.03;
+  }
+  .bg-lines::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent, transparent 40px,
+      rgba(201,168,76,0.5) 40px, rgba(201,168,76,0.5) 41px
+    );
+  }
+</style>
+</head>
+<body>
+ 
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+ 
+<div id="particles"></div>
+<div class="bg-lines"></div>
+<div id="transition-overlay"></div>
+ 
+<!-- SCREEN 1: INTRO -->
+<div id="screen-intro">
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope-el">
+      <div class="envelope-heart">💌</div>
+    </div>
+  </div>
+  <h1 class="intro-title">A Surprise Just for You</h1>
+  <p class="intro-sub">A love message awaits</p>
+  <button class="intro-cta" id="btn-open">Open the envelope</button>
+</div>
+ 
+<!-- SCREEN 2: QUIZ -->
+<div id="screen-quiz">
+  <div class="quiz-header">
+    <div class="quiz-label">✦ The Game of Love ✦</div>
+    <h2 class="quiz-title">How well do you<br><em>know me</em>&nbsp;?</h2>
+  </div>
+ 
+  <div class="score-bar" id="score-bar"></div>
+ 
+  <div class="progress-bar-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0 / 4</div>
+  </div>
+ 
+  <div class="question-card" id="question-card">
+    <span class="question-number" id="q-number">01</span>
+    <span class="question-icon" id="q-icon"></span>
+    <p class="question-text" id="q-text"></p>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn"><span id="next-label">Next question →</span></button>
+  </div>
+</div>
+ 
+<!-- SCREEN 3: REVEAL -->
+<div id="screen-reveal">
+  <div class="reveal-inner">
+    <div class="reveal-badge">🎁</div>
+    <p class="reveal-congrats">✦ Congratulations ✦</p>
+    <h2 class="reveal-title">You've won,<br>my <em>Love</em></h2>
+    <p class="reveal-sub">You know me better than you think...</p>
+ 
+    <div class="gift-card" id="gift-card">
+      <svg class="card-geo" viewBox="0 0 200 200" fill="none">
+        <circle cx="180" cy="20" r="80" stroke="#C9A84C" stroke-width="0.5"/>
+        <circle cx="180" cy="20" r="60" stroke="#C9A84C" stroke-width="0.5"/>
+        <circle cx="180" cy="20" r="40" stroke="#C9A84C" stroke-width="0.5"/>
+      </svg>
+      <div class="card-logo">GIFT <span>CARD</span></div>
+      <div class="card-chip"></div>
+      <div class="card-amount">
+        <div class="card-amount-label">Amount</div>
+        <div class="card-amount-value">1 200<span style="font-size:1.2rem"> DHS</span></div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-name">For you ❤</div>
+        <div class="card-code">LOVE-2025-XOXO</div>
+      </div>
+    </div>
+ 
+    <p class="reveal-message">
+      « Because you deserve everything that shines,<br>and so much more... »
+    </p>
+    <div class="reveal-note">
+      🌹 <strong>Valid starting today</strong> · Use it however you want, my heart.<br>
+      This gift is as small as my love for you is great.
+    </div>
+  </div>
+</div>
+ 
+<!-- SCREEN 4: TRY AGAIN -->
+<div id="screen-tryagain">
+  <div class="tryagain-icon">🌸</div>
+  <h2 class="tryagain-title">So close!</h2>
+  <p class="tryagain-sub">You need to answer all the questions correctly to unlock the surprise.<br>You know me better than that, I'm sure of it&nbsp;!</p>
+  <button class="retry-btn" onclick="retryQuiz()">Try again ↩</button>
+</div>
+ 
+<script>
+// ─── NEW QUESTIONS (FULLY UPDATED TO YOUR REQUEST) ───────────────────────────
+const questions = [
+  {
+    icon: "💖",
+    text: "Why do I love you?",
+    options: [
+      "Because of your infinite beauty",
+      "Because of your generous heart",
+      "There is no reason — because if we lost that reason, I would stop loving you, which is impossible. I'll love you until my last day.",
+      "Because you're funny"
+    ],
+    correct: 2,
+    feedback: "Exactly 💕 There is no reason, because my love for you will last until my last day. I love you unconditionally."
+  },
+  {
+    icon: "✈️",
+    text: "What's our dream destination?",
+    options: ["Paris", "Maldives", "Greece", "Dubai"],
+    correct: 2,
+    feedback: "Greece is calling us! Its islands, its sunsets... the perfect getaway for us 🇬🇷✨"
+  },
+  {
+    icon: "🐑",
+    text: "Which part of the sheep do I eat on Eid al-Adha?",
+    options: ["Only the leg", "Only the liver", "I eat it all", "Only the shoulder"],
+    correct: 2,
+    feedback: "Haha exactly! I eat it ALL 🍖 No waste, just pure joy. That's how much I love this tradition!"
+  },
+  {
+    icon: "🍲",
+    text: "What's my favorite meal?",
+    options: ["Tagine", "Couscous", "Pastilla", "Harira"],
+    correct: 1,
+    feedback: "Yes! Homemade couscous — with vegetables, lamb, and that special touch of love 💛 It always makes me happy."
+  }
+];
+ 
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let current = 0;
+let score = 0;
+let answered = false;
+let results = [];
+ 
+// ─── CURSOR ──────────────────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+setInterval(()=>{ tx+=(mx-tx)*0.15; ty+=(my-ty)*0.15; trail.style.left=tx+'px'; trail.style.top=ty+'px'; },16);
+ 
+// ─── PARTICLES ────────────────────────────────────────────────────────────────
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  for(let i=0;i<40;i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'vw';
+    p.style.width = p.style.height = (Math.random()*3+1)+'px';
+    p.style.animationDuration = (Math.random()*15+8)+'s';
+    p.style.animationDelay = (Math.random()*10)+'s';
+    const hue = Math.random() > 0.5 ? '#C9A84C' : '#C45068';
+    p.style.background = hue;
+    container.appendChild(p);
+  }
+}
+spawnParticles();
+ 
+// ─── INTRO → QUIZ ─────────────────────────────────────────────────────────────
+document.getElementById('btn-open').addEventListener('click', startQuiz);
+document.getElementById('envelope-el').addEventListener('click', startQuiz);
+ 
+function startQuiz() {
+  const intro = document.getElementById('screen-intro');
+  intro.classList.add('exit');
+  buildScoreDots();
+  renderQuestion(0);
+  setTimeout(()=>{
+    intro.style.display='none';
+    document.getElementById('screen-quiz').classList.add('visible');
+  },900);
+}
+ 
+// ─── SCORE DOTS ───────────────────────────────────────────────────────────────
+function buildScoreDots() {
+  const bar = document.getElementById('score-bar');
+  bar.innerHTML = '';
+  for(let i=0;i<questions.length;i++) {
+    const d = document.createElement('div');
+    d.className = 'score-dot' + (i===0?' current':'');
+    d.id = 'dot-'+i;
+    bar.appendChild(d);
+  }
+}
+ 
+// ─── RENDER QUESTION ─────────────────────────────────────────────────────────
+function renderQuestion(idx) {
+  const q = questions[idx];
+  answered = false;
+ 
+  document.getElementById('q-number').textContent = String(idx+1).padStart(2,'0');
+  document.getElementById('q-icon').textContent = q.icon;
+  document.getElementById('q-text').textContent = q.text;
+ 
+  const pct = (idx/questions.length)*100;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-text').textContent = idx+' / '+questions.length;
+ 
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.addEventListener('click',()=>selectOption(i,btn));
+    grid.appendChild(btn);
+  });
+ 
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+ 
+  const nb = document.getElementById('next-btn');
+  nb.className = 'next-btn';
+  document.getElementById('next-label').textContent =
+    idx === questions.length-1 ? 'See my gift 🎁' : 'Next question →';
+ 
+  // card entrance animation
+  const card = document.getElementById('question-card');
+  card.style.opacity='0'; card.style.transform='translateX(30px)';
+  setTimeout(()=>{ card.style.transition='opacity 0.4s ease,transform 0.4s ease'; card.style.opacity='1'; card.style.transform='translateX(0)'; },50);
+}
+ 
+// ─── SELECT OPTION ────────────────────────────────────────────────────────────
+function selectOption(idx, btn) {
+  if(answered) return;
+  answered = true;
+ 
+  const q = questions[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.style.pointerEvents='none');
+ 
+  const fb = document.getElementById('feedback');
+ 
+  if(idx === q.correct) {
+    btn.classList.add('correct');
+    score++;
+    results.push(true);
+    document.getElementById('dot-'+current).className='score-dot correct-dot';
+    fb.className = 'feedback fb-correct show';
+    fb.innerHTML = '✓ ' + q.feedback;
+  } else {
+    btn.classList.add('wrong');
+    results.push(false);
+    btns[q.correct].classList.add('correct');
+    document.getElementById('dot-'+current).className='score-dot wrong-dot';
+    fb.className = 'feedback fb-wrong show';
+    fb.innerHTML = '✗ Not quite... The correct answer was: <strong>'+q.options[q.correct]+'</strong>';
+  }
+ 
+  const nb = document.getElementById('next-btn');
+  nb.classList.add('show');
+  nb.addEventListener('click', nextQuestion, {once:true});
+}
+ 
+// ─── NEXT QUESTION ────────────────────────────────────────────────────────────
+function nextQuestion() {
+  current++;
+  if(current >= questions.length) {
+    endQuiz();
+    return;
+  }
+  document.getElementById('dot-'+current).classList.add('current');
+  const overlay = document.getElementById('transition-overlay');
+  overlay.style.transition='opacity 0.25s ease';
+  overlay.classList.add('flash');
+  setTimeout(()=>{
+    renderQuestion(current);
+    overlay.style.transition='opacity 0.5s ease';
+    overlay.classList.remove('flash');
+  },250);
+}
+ 
+// ─── END QUIZ ─────────────────────────────────────────────────────────────────
+function endQuiz() {
+  document.getElementById('progress-fill').style.width='100%';
+  document.getElementById('progress-text').textContent = questions.length+' / '+questions.length;
+ 
+  setTimeout(()=>{
+    const allCorrect = results.every(r=>r);
+    if(allCorrect) {
+      showReveal();
+    } else {
+      showTryAgain();
+    }
+  },600);
+}
+ 
+// ─── REVEAL ───────────────────────────────────────────────────────────────────
+function showReveal() {
+  document.getElementById('screen-reveal').classList.add('show');
+  launchConfetti();
+}
+ 
+function launchConfetti() {
+  const colors = ['#C9A84C','#E8C97A','#C45068','#F5E9C8','#8B2A3A','#fff'];
+  const container = document.getElementById('screen-reveal');
+  for(let i=0;i<90;i++) {
+    setTimeout(()=>{
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100+'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.width = c.style.height = (Math.random()*10+5)+'px';
+      c.style.borderRadius = Math.random()>0.5?'50%':'2px';
+      c.style.animationDuration = (Math.random()*3+2)+'s';
+      c.style.animationDelay = '0s';
+      container.appendChild(c);
+      setTimeout(()=>c.remove(), 5000);
+    }, i*60);
+  }
+}
+ 
+// ─── TRY AGAIN ────────────────────────────────────────────────────────────────
+function showTryAgain() {
+  document.getElementById('screen-tryagain').classList.add('show');
+}
+ 
+function retryQuiz() {
+  current = 0; score = 0; results = [];
+  document.getElementById('screen-tryagain').classList.remove('show');
+  buildScoreDots();
+  renderQuestion(0);
+}
+</script>
+</body>
+</html>
+```
